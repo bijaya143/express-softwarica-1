@@ -1,0 +1,23 @@
+// using database
+use test;
+
+// all dbs
+show dbs;
+
+// collection
+show collections;
+
+//create collections
+db.createCollection('users');
+
+// inserting single data
+db.users.insertOne({
+    firstName: "Bijaya",
+    lastName: "Majhi",
+    age: 16,
+    address: "Kathmandu",
+    cars: [{
+        name: "Mercedes",
+        color: "Black"
+    }]
+});

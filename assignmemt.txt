@@ -1,0 +1,9 @@
+Task
+
+Date 4/23/2024
+
+Model - Controller - Routes - Index.js
+
+All related to a product
+
+Final URI: /api/products/create
