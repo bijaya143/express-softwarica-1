@@ -62,4 +62,28 @@ const bcrypt = require('bcrypt');
         return hash;
     }
 
-module.exports = {createUser};
+
+    const login = async (req, res) => {
+        const {email, password} = req.body // Destructuring
+
+        if(!email || !password) { // Validation
+            return res.json({
+                success: false,
+                message: 'Please enter required fields'
+                });
+            }
+        const user = await getUser(email);
+        if(!user) {
+            res.json({
+                success: false,
+                message: 'User does not exist.'
+            })
+        } else {
+            res.json({
+                success: true,
+                message: 'user has been logged in.'
+            })
+        }
+    }
+
+module.exports = {createUser, login};
