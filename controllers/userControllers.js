@@ -1,17 +1,22 @@
 const user = require('../models/userModels')
 const bcrypt = require('bcrypt');
 
-// Make a func
+    /**
+     * 
+     * @param {*} req 
+     * @param {*} res 
+     * @returns string
+     */
     const createUser = async (req, res) => {
-        // res.send('Create User API.');
-        const {firstName, lastName, email, password} = req.body //Destructuring
+        const {firstName, lastName, email, password} = req.body // Destructuring
 
-        if(!firstName || !lastName || !email || !password) {
+        if(!firstName || !lastName || !email || !password) { // Validation
             return res.json({success: false,
                 message: 'Please enter required fields'
                 });
             }
         try {
+            // Existing user
             const duplicateUser = await getUser(email);
             if(duplicateUser) {
                 return res.json({
@@ -19,8 +24,10 @@ const bcrypt = require('bcrypt');
                 message: `User with email: ${email} already exists.`
             });
             }
-            delete password;
+            // Password hashing
             req.body.password = await hasPassword(password, 10);
+
+            // User store
             await user.create(req.body);
             return res.json({
                 success: true,
@@ -33,8 +40,12 @@ const bcrypt = require('bcrypt');
             });
         }
     }
-// create
 
+    /**
+     * 
+     * @param {*} userEmail 
+     * @returns user
+     */
     const getUser = async (userEmail) => {
         return await user.findOne({email: userEmail});
     }

@@ -2,8 +2,16 @@
 const express = require('express') 
 const dotenv = require('dotenv')
 const connectDB = require('./database/db')
+const cors = require('cors');
 
 const app = express(); // Define application
+
+const corsOptions = {
+    origin: true,
+    credentials: true,
+    optionSuccessStatus: 200
+}
+app.use(cors(corsOptions))
 
 dotenv.config() // Env Configuration
 
@@ -19,6 +27,10 @@ console.log(`App running at port: ${port}`)
 
 
 app.get('/test', (req, res) => {
+    res.send('Fine!')
+})
+
+app.get('/test-new', (req, res) => {
     res.send('Fine!')
 })
 
