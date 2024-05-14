@@ -81,7 +81,7 @@ const bcrypt = require('bcrypt');
         } else {
             res.json({
                 success: true,
-                message: 'user has been logged in.'
+                message: 'User has been logged in.'
             })
         }
     }
