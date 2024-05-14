@@ -1,5 +1,6 @@
 const user = require('../models/userModels')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
     /**
      * 
@@ -79,10 +80,40 @@ const bcrypt = require('bcrypt');
                 message: 'User does not exist.'
             })
         } else {
+            const isValidPassword = await validatePassword(password, user.password)
+            if(!isValidPassword) {
+                res.json({
+                    success: false,
+                    message: 'Password does not match.'
+                })
+            }
+
+            const payload = await generatePayload(user)
+            const token = await generateToken(payload);
             res.json({
                 success: true,
-                message: 'User has been logged in.'
+                message: 'User has been logged in.',
+                data: token
             })
+        }
+    }
+
+    const validatePassword = async (password, userPassword) => {
+        return await bcrypt.compare(password, userPassword);
+    }
+
+    const generateToken = async (payload) => {
+        return jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '1h' 
+        })
+    }
+
+    const generatePayload = async (user) => {
+        return {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
         }
     }
 
