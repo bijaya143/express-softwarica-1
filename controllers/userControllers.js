@@ -86,8 +86,8 @@ const jwt = require('jsonwebtoken');
                     success: false,
                     message: 'Password does not match.'
                 })
+                return
             }
-
             const payload = await generatePayload(user)
             const token = await generateToken(payload);
             res.json({
