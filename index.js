@@ -3,6 +3,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const connectDB = require('./database/db')
 const cors = require('cors');
+const multipart = require('connect-multiparty')
 
 const app = express(); // Define application
 
@@ -18,6 +19,9 @@ dotenv.config() // Env Configuration
 connectDB(); // Database Connection
 
 app.use(express.json()); //JSON middleware
+app.use(multipart({
+    uploadDir: './public/uploads/'
+}));
 
 const port = process.env.PORT || 3600;  // Port
 
@@ -36,5 +40,6 @@ app.get('/test-new', (req, res) => {
 
 app.use('/api/user', require('./routes/userRoutes')) //User Routes
 app.use('/api/product', require('./routes/productRoutes')) //Product Routes
+app.use('/api', require('./routes/uploadRoutes')) //Upload Routes
 
 
