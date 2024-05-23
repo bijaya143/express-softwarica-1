@@ -40,6 +40,6 @@ app.get('/test-new', (req, res) => {
 
 app.use('/api/user', require('./routes/userRoutes')) //User Routes
 app.use('/api/product', require('./routes/productRoutes')) //Product Routes
-app.use('/api', require('./routes/uploadRoutes')) //Upload Routes
+app.use('', require('./routes/uploadRoutes')) //Upload Routes
 
 

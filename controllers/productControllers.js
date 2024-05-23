@@ -3,7 +3,7 @@ const product = require('../models/productModels')
 const createProduct = async (req, res) => {
     const {title, description, price, category} = req.body // Destructuring
     if(!title || !description || !price || !category  || !req.files?.['image']) { // Validation
-        return res.json({success: false,
+        return res.status(400).json({success: false,
             message: 'Please enter required fields'
             });
         }
