@@ -1,4 +1,7 @@
-const product = require('../models/productModels')
+const product = require('../models/productModels');
+const { removeFile } = require('./uploadControllers');
+const path = require("path");
+const rootDir = process.cwd();
 
 const createProduct = async (req, res) => {
     const {title, description, price, category} = req.body // Destructuring
@@ -65,8 +68,19 @@ const getProduct = async (req, res) => {
 }
 
 const deleteProduct = async (req, res) => {
+    const existingProduct = await product.findById(req.params.id)
+    if(!existingProduct) {
+        return res.json({
+            success: false,
+            message: 'Product does not exist.'
+        })
+    }
+    if(existingProduct.image){
+        const filePath = path.join(rootDir, existingProduct.image);
+        removeFile(filePath) 
+    }
     try {
-        const product = await product.findOneByIdAndDelete(req.params.id)
+        await product.findOneAndDelete(req.params.id)
         return res.status(201).json({
         success: true,
         message: 'Product has been deleted.'
@@ -77,6 +91,36 @@ const deleteProduct = async (req, res) => {
             message:'Internal Server Error'
         })  
     }
-    
 }
-module.exports = {createProduct, getProducts, getProduct, deleteProduct};
+
+const updateProduct = async (req, res) => {
+    let updateParams = {
+        ...req.body
+    }
+    const existingProduct = await product.findById(req.params.id)
+    if(!existingProduct) {
+        return res.json({
+            success: false,
+            message: 'Product does not exist.'
+        })
+    }
+    if(req.files && req.files.image){
+        const filePath = path.join(rootDir, existingProduct.image);
+        removeFile(filePath) 
+        updateParams = {...updateParams, image: req.files.image.path}
+    }
+    try {
+    await product.updateOne({_id: req.params.id, ...updateParams});
+        return res.status(201).json({
+            success: true,
+            message: 'Product has been updated.'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        })
+    }
+}
+
+module.exports = {createProduct, getProducts, getProduct, deleteProduct,updateProduct};
