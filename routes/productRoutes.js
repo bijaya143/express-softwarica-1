@@ -1,9 +1,16 @@
 const router = require('express').Router()
 const productControllers = require('../controllers/productControllers.js')
 
-// Make a create user API
 router.post('/create', 
 productControllers.createProduct
 )
+
+router.get('', 
+productControllers.getProducts
+)
+
+router.get('/:id', productControllers.getProduct)
+
+router.delete('/:id', productControllers.deleteProduct)
 
 module.exports = router

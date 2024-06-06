@@ -9,7 +9,7 @@ const createProduct = async (req, res) => {
         }
     try {
         // Existing product
-        const duplicateProduct = await getProduct(title);
+        const duplicateProduct = await validateProduct(title);
         if(duplicateProduct) {
             return res.json({
             success: false,
@@ -36,8 +36,47 @@ const createProduct = async (req, res) => {
  * @param {*} title 
  * @returns product
  */
-const getProduct = async (title) => {
+const validateProduct = async (title) => {
     return await product.findOne({title: title});
 }
 
-module.exports = {createProduct};
+const getProducts = async (req,res) => {
+    const products = await product.find();
+    res.status(200).json({
+        success: true,
+        data: products
+    })
+}
+
+
+const getProduct = async (req, res) => {
+    const product1 = await product.findOne({_id: req.params.id})
+    if(!product1){
+        return res.status(404).json({
+            success: false,
+            message: 'Product does not exist.'
+        })
+    }
+    return res.status(200).json({
+        success: true,
+        data: product1,
+        message: 'Product fetched successfully'
+    })
+}
+
+const deleteProduct = async (req, res) => {
+    try {
+        const product = await product.findOneByIdAndDelete(req.params.id)
+        return res.status(201).json({
+        success: true,
+        message: 'Product has been deleted.'
+    })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message:'Internal Server Error'
+        })  
+    }
+    
+}
+module.exports = {createProduct, getProducts, getProduct, deleteProduct};
