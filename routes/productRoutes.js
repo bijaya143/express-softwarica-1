@@ -1,11 +1,12 @@
 const router = require('express').Router()
 const productControllers = require('../controllers/productControllers.js')
+const authGuard = require('../middleware/authGuard.js')
 
 router.post('/create', 
 productControllers.createProduct
 )
 
-router.get('', 
+router.get('', authGuard,
 productControllers.getProducts
 )
 
