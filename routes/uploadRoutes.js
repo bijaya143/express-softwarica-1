@@ -11,7 +11,7 @@ router.get("/public/uploads/:fileName", (req, res) => {
       if (err) {
         // If an error occurs while sending the file, handle it here
         console.error(err);
-        res.status(err.status).end();
+        res.end();
       } else {
         console.log(`File ${filename} sent successfully.`);
       }
